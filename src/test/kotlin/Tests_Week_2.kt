@@ -29,4 +29,10 @@ class Tests {
         assertEquals(8, sumRange(1, 5, isDivisor(10)))
         //assertEquals(8, sumRange(1, 5))
     }
+
+    @Test
+    fun perfectTest() {
+        assertTrue(isPerfect(6))
+        assertEquals(listOf(6, 28, 496, 8128), (1..10000).filter { n -> isPerfect(n) })
+    }
 }

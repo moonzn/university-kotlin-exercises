@@ -16,6 +16,7 @@ fun isDivisor(n: Int): (Int) -> Boolean = { n % it == 0}
 
 //Exercise 4
 
+//if max < min
 fun sumRange(min: Int, max: Int, predicate: (Int) -> Boolean): Int {
     tailrec fun sumRangeAux(min: Int, sum: Int): Int =
         if(min == max)
@@ -24,4 +25,10 @@ fun sumRange(min: Int, max: Int, predicate: (Int) -> Boolean): Int {
 
 
     return sumRangeAux(min, 0)
+}
+
+//Exercise 5
+
+fun isPerfect(n: Int): Boolean {
+    return (sumRange(1, n-1, isDivisor(n)) == n)
 }
