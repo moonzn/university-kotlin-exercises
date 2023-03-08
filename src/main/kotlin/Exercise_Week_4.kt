@@ -19,7 +19,7 @@ data class FileElement(
 data class DirectoryElement(
     override val name: String,
     override val parent: DirectoryElement? = null,
-    val children: List<Element>? = emptyList(),
+    val children: List<Element>? = mutableListOf(),
     val deepElementCount: Int
 ) : Element {
 
