@@ -3,7 +3,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class Tests {
+class TestsWeek2 {
 
     @Test
     fun sumRangeTest() {
