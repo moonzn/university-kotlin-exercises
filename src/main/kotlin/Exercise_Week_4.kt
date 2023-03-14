@@ -1,26 +1,30 @@
 
-interface Element {
+sealed interface Element {
     val name: String
-    val parent: DirectoryElement?
+    val parent: Element?
     val depth: Int
-        get() = 1 // TODO recursive element count
+        get() = parent?.depth?.plus(1) ?: 0
 
-    // TODO
+    //  TODO path(), toText()
+}
+
+data class DirectoryElement(
+    override val name: String,
+    override val parent: DirectoryElement? = null
+) : Element {
+    val children: List<Element> = mutableListOf()
+
+    init {
+        //TODO add children
+    }
+    // TODO deepElementCount()
 }
 
 data class FileElement(
     override val name: String,
     override val parent: DirectoryElement? = null
 ) : Element {
-
-    // TODO
-}
-
-data class DirectoryElement(
-    override val name: String,
-    override val parent: DirectoryElement? = null,
-    val children: List<Element>? = mutableListOf(),
-    val deepElementCount: Int
-) : Element {
-
+    init {
+        //TODO add children
+    }
 }
