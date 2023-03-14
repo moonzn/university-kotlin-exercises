@@ -3,7 +3,6 @@ import kotlin.test.assertEquals
 
 class TestsWeek4 {
 
-    // vals for testing directory and file elements
     val root = DirectoryElement("root")
     val files = DirectoryElement("files", root)
     val screenshots = DirectoryElement("screenshots", files)
@@ -11,8 +10,6 @@ class TestsWeek4 {
     val screenshot2 = FileElement("Screenshot2.png", screenshots)
     val screenshot3 = FileElement("Screenshot3.png", screenshots)
     val videos = DirectoryElement("videos", files)
-
-    //depth test
 
     @Test
     fun depthTest() {
@@ -26,8 +23,11 @@ class TestsWeek4 {
     }
 
     @Test
-    fun deepCountTest() {
-        //TODO
+    fun deepElementCountTest() {
+        assertEquals(6, root.deepElementCount)
+        assertEquals(5, files.deepElementCount)
+        assertEquals(3, screenshots.deepElementCount)
+        assertEquals(0, videos.deepElementCount)
     }
 
 

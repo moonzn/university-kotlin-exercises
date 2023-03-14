@@ -1,4 +1,3 @@
-
 sealed interface Element {
     val name: String
     val parent: Element?
@@ -12,12 +11,13 @@ data class DirectoryElement(
     override val name: String,
     override val parent: DirectoryElement? = null
 ) : Element {
-    val children: List<Element> = mutableListOf()
+    val children = mutableListOf<Element>()
+    val deepElementCount: Int
+        get() = -1
 
     init {
-        //TODO add children
+        parent?.children?.add(this)
     }
-    // TODO deepElementCount()
 }
 
 data class FileElement(
@@ -25,6 +25,6 @@ data class FileElement(
     override val parent: DirectoryElement? = null
 ) : Element {
     init {
-        //TODO add children
+        parent?.children?.add(this)
     }
 }
