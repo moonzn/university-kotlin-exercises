@@ -30,7 +30,28 @@ class TestsWeek4 {
         assertEquals(0, videos.deepElementCount)
     }
 
+    @Test
+    fun pathTest() {
+        assertEquals("C:/root", root.path)
+        assertEquals("C:/root/files", files.path)
+        assertEquals("C:/root/files/screenshots", screenshots.path)
+        assertEquals("C:/root/files/screenshots/Screenshot1.png", screenshot1.path)
+        assertEquals("C:/root/files/screenshots/Screenshot2.png", screenshot2.path)
+        assertEquals("C:/root/files/screenshots/Screenshot3.png", screenshot3.path)
+        assertEquals("C:/root/files/videos", videos.path)
+    }
 
+    @Test
+    fun toTextTest() {
+        assertEquals("\nroot\n", root.toText)
+        assertEquals("\nroot\n\tfiles\n", files.toText)
+        assertEquals("\nroot\n\tfiles\n\t\tscreenshots\n", screenshots.toText)
+        assertEquals("\nroot\n\tfiles\n\t\tscreenshots\n\t\t\tScreenshot1.png\n", screenshot1.toText)
+        assertEquals("\nroot\n\tfiles\n\t\tvideos\n", videos.toText)
+    }
 
-
+    @Test
+    fun testPrints() {
+        print(screenshot2.toText)
+    }
 }
