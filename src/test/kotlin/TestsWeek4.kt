@@ -49,6 +49,7 @@ class TestsWeek4 {
         assertEquals("\nroot\n\tfiles\n\t\tscreenshots\n\t\t\tScreenshot1.png\n", screenshot1.toText)
         assertEquals("\nroot\n\tfiles\n\t\tvideos\n", videos.toText)
     }
+    //do elemento chamado para baixo
 
     @Test
     fun testPrints() {
