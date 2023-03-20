@@ -15,7 +15,55 @@ enum class StudentType {
     Bachelor, Master, Doctoral
 }
 
-// obtem lista de atributos pela ordem do construtor primario
+interface TypeMapping {
+    fun mapType(kProperty: KProperty<*>): String
+    fun mapObject(objekt: Any?): String
+}
+
+class SQLMapping: TypeMapping {
+    override fun mapType(kProperty: KProperty<*>): String {
+        return when (kProperty.returnType.classifier) {
+            Int::class -> " INT"
+            String::class -> " CHAR"
+            else -> if (kProperty.returnType.classifier.isEnum) mapEnum(kProperty) else " NOT PREDICTED"
+        }
+    }
+
+    private fun mapEnum(kProperty: KProperty<*>): String {
+        val clazz = kProperty.returnType.classifier as KClass<*>
+        return clazz.enumConstants.joinToString(prefix = " ENUM(´", separator = "´, ´", postfix = "´)")
+    }
+
+    override fun mapObject(objekt: Any?): String {
+        if (objekt == null) return ""
+        return objekt::class.dataClassFields.joinToString {
+            when (it.returnType.classifier) {
+                Int::class -> it.call(objekt).toString()
+                else -> "´" + it.call(objekt).toString() + "´"
+            }
+        }
+    }
+}
+
+class SQLGenerator(private val typeMapping: TypeMapping) {
+    fun createTable(clazz: KClass<*>): String {
+       val fields = clazz.dataClassFields.joinToString(transform = ::kPropertyParse)
+       return "CREATE TABLE " + clazz.simpleName + " (" + fields + ");"
+    }
+
+    private fun kPropertyParse(kProperty: KProperty<*>): String {
+        val nullable = if (!kProperty.returnType.isMarkedNullable) " NOT NULL" else ""
+        return kProperty.name + typeMapping.mapType(kProperty) + nullable
+    }
+
+    fun insertInto(obj: Any): String {
+        val fields = obj::class.dataClassFields.joinToString(prefix = " (", separator = ", ", postfix = ") ") { it.name }
+        return "INSERT INTO " + obj::class.simpleName + fields + "VALUES (" + typeMapping.mapObject(obj) + ");"
+    }
+}
+
+//Helper Values
+
 val KClass<*>.dataClassFields: List<KProperty<*>>
     get() {
         require(isData) { "instance must be data class" }
@@ -24,58 +72,10 @@ val KClass<*>.dataClassFields: List<KProperty<*>>
         }
     }
 
-// saber se um KClassifier é um enumerado
 val KClassifier?.isEnum: Boolean
     get() = this is KClass<*> && this.isSubclassOf(Enum::class)
 
-// obter uma lista de constantes de um tipo enumerado
 val <T : Any> KClass<T>.enumConstants: List<T> get() {
     require(isEnum) { "instance must be enum" }
     return java.enumConstants.toList()
-}
-
-fun createTable(clazz: KClass<*>): String {
-    val start = "CREATE TABLE " + clazz.simpleName + " ("
-
-    fun listOfParameters(): List<String> {
-        val fields = clazz.dataClassFields
-        val listOfParameters = mutableListOf<String>()
-        fields.forEach { kProperty ->
-            if (kProperty.returnType.classifier.isEnum) {
-                val listOfEnums = mutableListOf<String>()
-                (kProperty.returnType.classifier as KClass<*>).enumConstants.forEach { enumString ->
-                    listOfEnums.add("´$enumString´")
-                }
-                val enum = listOfEnums.joinToString(prefix = "(", postfix = ")", separator = ", ")
-                val parameter = kProperty.name + " ENUM" + enum
-                listOfParameters.add(parameter)
-            } else {
-                var parameter = kProperty.name + " "
-                parameter += if (kProperty.returnType.toString() == "kotlin.String") {
-                    "CHAR"
-                } else {
-                    kProperty.returnType.toString().replace("kotlin.", "").uppercase()
-                }
-                if (!kProperty.returnType.isMarkedNullable) {
-                    parameter += " NOT NULL"
-                }
-                listOfParameters.add(parameter)
-            }
-        }
-        return listOfParameters
-    }
-    return listOfParameters().joinToString(prefix = start, postfix = ");", separator = ", ")
-}
-
-fun insertInto(clazz: KClass<*>): String {
-    return ""
-}
-
-fun main() {
-    val fields: List<KProperty<*>> = Student::class.dataClassFields
-    println(fields)
-    val isEnum = StudentType::class.isEnum
-    println(isEnum)
-    val enumConstants: List<StudentType> = StudentType::class.enumConstants
-    println(enumConstants)
 }
