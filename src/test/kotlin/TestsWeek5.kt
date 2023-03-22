@@ -1,19 +1,20 @@
 import kotlin.reflect.KProperty
 import kotlin.test.Test
 import kotlin.test.assertEquals
+
 class TestsWeek5 {
 
     private val testStudent = Student(25, "Zé", StudentType.Doctoral)
-    private val SQLGenerator = SQLGenerator(SQLMapping())
+    private val sqlGenerator = Week5.SQLGenerator(Week5.SQLMapping())
 
     @Test
     fun testCreateTable() {
-        assertEquals("CREATE TABLE Student (number INT NOT NULL, name CHAR NOT NULL, type ENUM(´Bachelor´, ´Master´, ´Doctoral´));", SQLGenerator.createTable(Student::class))
+        assertEquals("CREATE TABLE STUDENT (number INT NOT NULL, name CHAR NOT NULL, type ENUM(´Bachelor´, ´Master´, ´Doctoral´));", sqlGenerator.createTable(Student::class))
     }
 
     @Test
     fun testInsertInto() {
-        assertEquals("INSERT INTO Student (number, name, type) VALUES (25, ´Zé´, ´Doctoral´);", SQLGenerator.insertInto(testStudent))
+        assertEquals("INSERT INTO STUDENT (number, name, type) VALUES (25, ´Zé´, ´Doctoral´);", sqlGenerator.insertInto(testStudent))
     }
 }
 
