@@ -5,6 +5,7 @@ import kotlin.reflect.full.*
 
 @Target(AnnotationTarget.CLASS, AnnotationTarget.PROPERTY)
 annotation class DbName(val desc: String)
+@Target(AnnotationTarget.PROPERTY)
 annotation class PrimaryKey
 @Target(AnnotationTarget.PROPERTY)
 annotation class Length(val value: Int)
@@ -32,7 +33,7 @@ class SQLMapping: TypeMapping {
     override fun mapType(kProperty: KProperty<*>): String {
         return when (kProperty.returnType.classifier) {
             Int::class -> " INT"
-            String::class -> " CHAR" //TODO IF HAS ANNOTATED LENGTH VARCHAR + LENGTH
+            String::class -> if (kProperty.hasAnnotation<Length>()) " VARCHAR(${kProperty.findAnnotation<Length>()!!.value})" else " CHAR"//TODO IF HAS ANNOTATED LENGTH VARCHAR + LENGTH
             else -> if (kProperty.returnType.classifier.isEnum) mapEnum(kProperty) else " NOT PREDICTED"
         }
     }
@@ -68,13 +69,16 @@ class SQLGenerator(private val typeMapping: TypeMapping) {
         if (kProperty.hasAnnotation<PrimaryKey>()) {
             nullable = " PRIMARY KEY"
         }
-        //TODO IF ANNOTATED PRIMARY KEY?
-        return kProperty.name + typeMapping.mapType(kProperty) + nullable
+        return (if(kProperty.hasAnnotation<DbName>()) kProperty.findAnnotation<DbName>()!!.desc else kProperty.name) + typeMapping.mapType(kProperty) + nullable
     }
 
     fun insertInto(obj: Any): String {
         val fields = obj::class.dataClassFields.joinToString(prefix = " (", separator = ", ", postfix = ") ") { it.name }
-        return "INSERT INTO " + obj::class.simpleName!!.uppercase() + fields + "VALUES (" + typeMapping.mapObject(obj) + ");"
+        var name = obj::class.simpleName!!.uppercase()
+        if (obj::class.hasAnnotation<DbName>()) {
+            name = obj::class.findAnnotation<DbName>()!!.desc
+        }
+        return "INSERT INTO " + name + fields + "VALUES (" + typeMapping.mapObject(obj) + ");"
     }
 }
 
