@@ -3,13 +3,13 @@ import kotlin.test.assertEquals
 
 class TestsWeek4 {
 
-    private val root = DirectoryElement("root")
-    private val files = DirectoryElement("files", root)
-    private val screenshots = DirectoryElement("screenshots", files)
-    private val screenshot1 = FileElement("Screenshot1.png", screenshots)
-    private val screenshot2 = FileElement("Screenshot2.png", screenshots)
-    private val screenshot3 = FileElement("Screenshot3.png", screenshots)
-    private val videos = DirectoryElement("videos", files)
+    private val root = Week4.DirectoryElement("root")
+    private val files = Week4.DirectoryElement("files", root)
+    private val screenshots = Week4.DirectoryElement("screenshots", files)
+    private val screenshot1 = Week4.FileElement("Screenshot1.png", screenshots)
+    private val screenshot2 = Week4.FileElement("Screenshot2.png", screenshots)
+    private val screenshot3 = Week4.FileElement("Screenshot3.png", screenshots)
+    private val videos = Week4.DirectoryElement("videos", files)
 
     @Test
     fun depthTest() {
