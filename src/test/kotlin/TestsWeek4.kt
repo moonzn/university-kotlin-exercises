@@ -3,13 +3,13 @@ import kotlin.test.assertEquals
 
 class TestsWeek4 {
 
-    val root = DirectoryElement("root")
-    val files = DirectoryElement("files", root)
-    val screenshots = DirectoryElement("screenshots", files)
-    val screenshot1 = FileElement("Screenshot1.png", screenshots)
-    val screenshot2 = FileElement("Screenshot2.png", screenshots)
-    val screenshot3 = FileElement("Screenshot3.png", screenshots)
-    val videos = DirectoryElement("videos", files)
+    private val root = DirectoryElement("root")
+    private val files = DirectoryElement("files", root)
+    private val screenshots = DirectoryElement("screenshots", files)
+    private val screenshot1 = FileElement("Screenshot1.png", screenshots)
+    private val screenshot2 = FileElement("Screenshot2.png", screenshots)
+    private val screenshot3 = FileElement("Screenshot3.png", screenshots)
+    private val videos = DirectoryElement("videos", files)
 
     @Test
     fun depthTest() {
@@ -49,7 +49,6 @@ class TestsWeek4 {
         assertEquals("\nroot\n\tfiles\n\t\tscreenshots\n\t\t\tScreenshot1.png\n", screenshot1.toText)
         assertEquals("\nroot\n\tfiles\n\t\tvideos\n", videos.toText)
     }
-    //do elemento chamado para baixo
 
     @Test
     fun testPrints() {

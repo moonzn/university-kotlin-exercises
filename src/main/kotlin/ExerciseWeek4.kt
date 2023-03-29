@@ -9,27 +9,15 @@ sealed interface Element {
         get() = parent?.toText?.plus("\t".repeat(this.depth).plus("$name\n")) ?: "\n$name\n"
 }
 
-/*val toText: String
-    get() {
-        fun findRoot(seed: Element): Element {
-            return if (seed.parent != null) {
-                findRoot(seed.parent!!)
-            } else {
-                seed
-            }
-        }
-        //TODO from root calculate full tree
-    }*/
-
 data class DirectoryElement(
     override val name: String,
-    override val parent: DirectoryElement? = null
+    override val parent: DirectoryElement? = null,
+    internal val children: MutableList<Element> = mutableListOf<Element>()
 ) : Element {
     init {
         parent?.children?.add(this)
     }
 
-    val children = mutableListOf<Element>()
     val deepElementCount: Int
         get() = children.sumOf {
             when (it) {
