@@ -14,7 +14,7 @@ object Week4 {
     data class DirectoryElement(
         override val name: String,
         override val parent: DirectoryElement? = null,
-        internal val children: MutableList<Element> = mutableListOf<Element>()
+        internal val children: MutableList<Element> = mutableListOf()
     ) : Element {
         init {
             parent?.children?.add(this)
