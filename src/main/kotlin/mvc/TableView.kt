@@ -75,6 +75,9 @@ class TableView(val model: PairDataSet) : JPanel() {
             add(second)
 
             add(button("delete") {
+                observers.forEach {
+                    it.pairRemoved(pair)
+                }
                 // TODO 4: fire event
             })
         }
@@ -90,7 +93,8 @@ class TableView(val model: PairDataSet) : JPanel() {
 }
 
 interface TableViewObserver {
-    fun pairModified(old: IntPair, new: IntPair) {}
+    fun pairRemoved(pair: IntPair) { }
+    fun pairModified(old: IntPair, new: IntPair) { }
 
     // TODO: observable event: delete mvc.button click
 }

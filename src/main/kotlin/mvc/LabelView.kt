@@ -10,6 +10,14 @@ class LabelView(private val model: PairDataSet) : JLabel() {
             override fun pairAdded(pair: IntPair) {
                 text = "$model"
             }
+
+            override fun pairRemoved(pair: IntPair) {
+                text = "$model"
+            }
+
+            override fun pairModified(old: IntPair, new: IntPair) {
+                text = "$model"
+            }
         })
     }
 }

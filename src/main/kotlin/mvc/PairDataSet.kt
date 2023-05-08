@@ -21,6 +21,16 @@ class PairDataSet(vararg pairs: IntPair) : Iterable<IntPair> {
             }
     }
 
+    fun remove(p: IntPair) {
+        if (data.remove(p))
+            observers.forEach {
+                it.pairRemoved(p)
+            }
+    }
+
+    fun modify(old: IntPair, new: IntPair) {
+    }
+
     override fun iterator(): Iterator<IntPair> = data.iterator()
 
     override fun toString(): String {
@@ -30,6 +40,7 @@ class PairDataSet(vararg pairs: IntPair) : Iterable<IntPair> {
 
 interface PairDataSetObserver {
     fun pairAdded(pair: IntPair) { }
-
+    fun pairRemoved(pair: IntPair) { }
+    fun pairModified(old: IntPair, new: IntPair) { }
     // TODO 3: observable operations for removing and replacing pairs
 }
