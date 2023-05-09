@@ -29,6 +29,10 @@ class PairDataSet(vararg pairs: IntPair) : Iterable<IntPair> {
     }
 
     fun modify(old: IntPair, new: IntPair) {
+        if (data.remove(old) && data.add(new))
+            observers.forEach {
+                it.pairModified(old, new)
+            }
     }
 
     override fun iterator(): Iterator<IntPair> = data.iterator()

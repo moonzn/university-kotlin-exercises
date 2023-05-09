@@ -20,6 +20,19 @@ class TableView(val model: PairDataSet) : JPanel() {
         }
 
         // TODO 4: register observer in the model
+        model.addObserver(object: PairDataSetObserver {
+            override fun pairAdded(pair: IntPair) {
+                addPair(pair)
+            }
+
+            override fun pairRemoved(pair: IntPair) {
+                removePair(pair)
+            }
+
+            override fun pairModified(old: IntPair, new: IntPair) {
+                replacePair(old, new)
+            }
+        })
     }
 
     fun addObserver(observer: TableViewObserver) {
@@ -32,7 +45,7 @@ class TableView(val model: PairDataSet) : JPanel() {
         repaint()
     }
 
-    fun removePair(pair: IntPair) {
+    private fun removePair(pair: IntPair) {
         val find = components.find { it is PairComponent && it.matches(pair) }
         find?.let {
             remove(find)
@@ -41,7 +54,7 @@ class TableView(val model: PairDataSet) : JPanel() {
         repaint()
     }
 
-    fun replacePair(old: IntPair, new: IntPair) {
+    private fun replacePair(old: IntPair, new: IntPair) {
         val find = components.find { it is PairComponent && it.matches(old) } as? PairComponent
         find?.let {
             find.modify(new)

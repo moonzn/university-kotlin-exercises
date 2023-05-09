@@ -27,6 +27,16 @@ class CanvasView(private val model: PairDataSet) : JComponent() {
                 revalidate()
                 repaint()
             }
+
+            override fun pairRemoved(pair: IntPair) {
+                revalidate()
+                repaint()
+            }
+
+            override fun pairModified(old: IntPair, new: IntPair) {
+                revalidate()
+                repaint()
+            }
         })
 
         addMouseListener(object : MouseAdapter() {

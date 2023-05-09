@@ -6,13 +6,6 @@ package mvc
  */
 fun main() {
     val model = PairDataSet(Pair(10, 10), Pair(20, 20), Pair(30, 30))
-    //Canvas
-    val canvas = CanvasView(model)
-    canvas.addObserver(object: CanvasViewObserver {
-        override fun pairClicked(pair: IntPair) {
-            model.add(pair)
-        }
-    })
 
     //Table
     val table = TableView(model)
@@ -22,6 +15,15 @@ fun main() {
         }
 
         override fun pairModified(old: IntPair, new: IntPair) {
+            model.modify(old, new)
+        }
+    })
+
+    //Canvas
+    val canvas = CanvasView(model)
+    canvas.addObserver(object: CanvasViewObserver {
+        override fun pairClicked(pair: IntPair) {
+            model.add(pair)
         }
     })
 
